@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Honolytics — Quiz des capitales</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">🌐 Honolytics</div>
+</header>
+
+<main id="app">
+
+  <!-- ÉCRAN D'ACCUEIL -->
+  <section id="screen-home" class="screen">
+    <h1>Quiz des capitales</h1>
+    <p class="subtitle">Choisis une zone géographique pour lancer un quiz de 10 villes.<br>
+    Pour chaque ville, retrouve le <strong>pays</strong>, la <strong>longitude</strong> et la <strong>latitude</strong>.</p>
+
+    <div class="scope-grid" id="scope-grid">
+      <!-- généré en JS -->
+    </div>
+  </section>
+
+  <!-- ÉCRAN DE QUIZ -->
+  <section id="screen-quiz" class="screen hidden">
+    <div class="quiz-header">
+      <span id="quiz-progress">Ville 1/10</span>
+      <span id="quiz-score">Score : 0</span>
+    </div>
+
+    <div class="city-card">
+      <div class="city-label">Quelle est cette ville ?</div>
+      <div class="city-name" id="city-name">—</div>
+    </div>
+
+    <form id="quiz-form" autocomplete="off">
+      <div class="field">
+        <label for="input-country">Pays</label>
+        <input type="text" id="input-country" placeholder="ex : France" />
+        <span class="field-feedback" id="feedback-country"></span>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="input-lon">Longitude</label>
+          <input type="number" step="any" id="input-lon" placeholder="ex : 2.35" />
+          <span class="field-feedback" id="feedback-lon"></span>
+        </div>
+        <div class="field">
+          <label for="input-lat">Latitude</label>
+          <input type="number" step="any" id="input-lat" placeholder="ex : 48.85" />
+          <span class="field-feedback" id="feedback-lat"></span>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button type="submit" id="btn-validate" class="btn btn-primary">Valider</button>
+        <button type="button" id="btn-next" class="btn btn-primary hidden">Ville suivante →</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ÉCRAN DE RÉSULTATS -->
+  <section id="screen-result" class="screen hidden">
+    <h1>Résultat</h1>
+    <div class="final-score" id="final-score">0 / 30</div>
+    <div class="result-table-wrap">
+      <table class="result-table" id="result-table">
+        <thead>
+          <tr>
+            <th>Ville</th>
+            <th>Pays</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="result-tbody"></tbody>
+      </table>
+    </div>
+    <div class="quiz-actions">
+      <button type="button" id="btn-replay" class="btn btn-primary">Rejouer cette zone</button>
+      <button type="button" id="btn-home" class="btn btn-secondary">Retour à l'accueil</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">Honolytics — données issues de cities.csv</footer>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

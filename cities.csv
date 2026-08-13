@@ -1,0 +1,123 @@
+sep=;
+name;country;continent;longitude;latitude
+canberra;australie;océanie;149.13;-35.28
+port-vila;vanuatu;océanie;168.32;-17.73
+port moresby;papouasie-nouvelle-guinée;océanie;147.18;-9.48
+pyongyang;corée du nord;asie;125.75;39.02
+islamabad;pakistan;asie;73.06;33.68
+malé;maldives;asie;73.51;4.18
+jakarta;indonésie;asie;106.85;-6.21
+kuala lumpur;malaisie;asie;101.69;3.14
+dacca;bangladesh;asie;90.41;23.81
+douchanbé;tadjikistan;asie;68.78;38.54
+bakou;azerbaïdjan;asie;49.87;40.41
+beyrouth;liban;asie;35.50;33.89
+tbilissi;géorgie;asie;44.79;41.72
+copenhague;danemark;europe;12.57;55.68
+apia;samoa;océanie;-171.75;-13.85
+rome;italie;europe;12.50;41.90
+windhoek;namibie;afrique;17.08;-22.57
+zagreb;croatie;europe;15.98;45.81
+ljubljana;slovénie;europe;14.51;46.06
+banjul;gambie;afrique;-16.58;13.45
+le caire;égypte;afrique;31.24;30.04
+damas;syrie;asie;36.28;33.51
+bissau;guinée-bissau;afrique;-15.60;11.86
+caracas;venezuela;amérique du sud;-66.90;10.48
+harare;zimbabwe;afrique;31.05;-17.83
+lomé;togo;afrique;1.22;6.13
+brazzaville;congo;afrique;15.24;-4.26
+mbabane;eswatini;afrique;31.14;-26.32
+panama;panama;amérique du nord;-79.52;8.98
+tirana;albanie;europe;19.82;41.33
+managua;nicaragua;amérique du nord;-86.25;12.11
+san josé;costa rica;amérique du nord;-84.08;9.93
+las vegas;états-unis;amérique du nord;-115.14;36.17
+vancouver;canada;amérique du nord;-123.12;49.28
+new york;états-unis;amérique du nord;-74.01;40.71
+georgetown;guyana;amérique du sud;-58.16;6.80
+asuncion;paraguay;amérique du sud;-57.58;-25.30
+mexico;mexique;amérique du nord;-99.13;19.43
+berne;suisse;europe;7.45;46.95
+vilnius;lituanie;europe;25.28;54.69
+riga;lettonie;europe;24.11;56.95
+djibouti;djibouti;afrique;43.15;11.59
+buenos aires;argentine;amérique du sud;-58.38;-34.61
+amsterdam;pays-bas;europe;4.90;52.37
+reykjavik;islande;europe;-21.94;64.15
+montevideo;uruguay;amérique du sud;-56.16;-34.90
+sarajevo;bosnie-herzégovine;europe;18.41;43.86
+dodoma;tanzanie;afrique;35.74;-6.16
+yaoundé;cameroun;afrique;11.50;3.87
+washington;états-unis;amérique du nord;-77.04;38.91
+lilongwe;malawi;afrique;33.78;-13.96
+nouakchott;mauritanie;afrique;-15.98;18.09
+kampala;ouganda;afrique;32.58;0.35
+abuja;nigeria;afrique;7.49;9.08
+kaboul;afghanistan;asie;69.21;34.56
+maputo;mozambique;afrique;32.58;-25.97
+berlin;allemagne;europe;13.40;52.52
+asmara;érythrée;afrique;38.93;15.32
+luxembourg;luxembourg;europe;6.13;49.61
+téhéran;iran;asie;51.42;35.69
+bichkek;kirghizistan;asie;74.60;42.87
+são paulo;brésil;amérique du sud;-46.63;-23.55
+bangkok;thaïlande;asie;100.50;13.75
+libreville;gabon;afrique;9.45;0.39
+moscou;russie;europe;37.62;55.75
+tunis;tunisie;afrique;10.18;36.81
+accra;ghana;afrique;-0.19;5.60
+prague;république tchèque;europe;14.42;50.09
+port-louis;maurice;afrique;57.50;-20.16
+achgabat;turkménistan;asie;58.38;37.95
+santiago;chili;amérique du sud;-70.65;-33.45
+n'djamena;tchad;afrique;15.06;12.13
+riyad;arabie saoudite;asie;46.72;24.71
+madrid;espagne;europe;-3.70;40.42
+thimphou;bhoutan;asie;89.64;27.47
+katmandou;népal;asie;85.19;27.42
+bratislava;slovaquie;europe;17.06;48.08
+shanghai;chine;asie;121.28;31.13
+amman;jordanie;asie;35.56;31.57
+bucarest;roumanie;europe;26.06;44.25
+bujumbura;burundi;afrique;29.21;-3.22
+doha;qatar;asie;51.31;25.16
+yamoussoukro;côte d'ivoire;afrique;-5.16;6.49
+helsinki;finlande;europe;24.56;60.10
+tallinn;estonie;europe;24.45;59.26
+belgrade;serbie;europe;20.27;44.48
+abou dabi;émirats arabes unis;asie;54.22;24.28
+conakry;guinée;afrique;-13.40;9.32
+antananarivo;madagascar;afrique;47.31;-18.54
+melbourne;australie;océanie;144.57;-37.48
+podgorica;monténégro;europe;19.16;42.26
+bagdad;irak;asie;44.23;33.18
+honolulu;états-unis;océanie;-157.51;21.18
+dakar;sénégal;afrique;-17.20;14.45
+oslo;norvège;europe;10.44;59.54
+brasilia;brésil;amérique du sud;-47.55;-15.46
+athènes;grèce;europe;23.42;37.58
+astana;kazakhstan;asie;71.26;51.10
+malabo;guinée équatoriale;afrique;8.47;3.45
+suva;fidji;océanie;178.26;-18.08
+pékin;chine;asie;116.24;39.54
+bandar seri begawan;brunei;asie;114.56;4.56
+mogadiscio;somalie;afrique;45.21;2.02
+tokyo;japon;asie;139.42;35.41
+séoul;corée du sud;asie;126.58;37.33
+alger;algérie;afrique;3.02;36.45
+tegucigalpa;honduras;amérique du nord;-87.12;14.04
+nairobi;kenya;afrique;36.49;-1.17
+la valette;malte;europe;14.30;35.53
+kinshasa;république démocratique du congo;afrique;15.19;-4.19
+port-au-prince;haïti;amérique du nord;-72.20;18.32
+sucre;bolivie;amérique du sud;-65.15;-19.02
+minsk;biélorussie;europe;27.34;53.54
+maseru;lesotho;afrique;27.28;-29.18
+honiara;îles salomon;océanie;159.57;-9.26
+quito;équateur;amérique du sud;-78.31;-0.13
+rio de janeiro;brésil;amérique du sud;-43.12;-22.54
+hanoi;vietnam;asie;105.57;21.01
+chisinau;moldavie;europe;28.50;47.01
+praia;cap-vert;afrique;-23.30;14.55
+addis abbeba;éthiopie;afrique;38.44;9.01
