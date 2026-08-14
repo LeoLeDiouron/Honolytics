@@ -9,7 +9,7 @@
 <body>
 
 <header class="app-header">
-  <div class="logo">🧭 Honolytics</div>
+  <div class="logo" id="logo-home">🧭 Honolytics</div>
 </header>
 
 <main id="app">
@@ -17,7 +17,7 @@
   <!-- ÉCRAN D'ACCUEIL -->
   <section id="screen-home" class="screen">
     <h1>Quiz des capitales</h1>
-    <p class="subtitle">Choisis tes options, puis une zone géographique pour lancer un quiz de 10 villes.</p>
+    <p class="subtitle">Choisis tes options, puis une zone géographique pour lancer le quiz.</p>
 
     <div class="options-panel">
       <div class="option-group">
@@ -32,6 +32,15 @@
         <div class="toggle-group" id="toggle-coords">
           <button type="button" class="toggle-btn active" data-value="yes">Avec coordonnées</button>
           <button type="button" class="toggle-btn" data-value="no">Sans coordonnées</button>
+        </div>
+      </div>
+      <div class="option-group">
+        <span class="option-label">Nombre de villes</span>
+        <div class="toggle-group" id="toggle-count">
+          <button type="button" class="toggle-btn" data-value="3">3</button>
+          <button type="button" class="toggle-btn active" data-value="5">5</button>
+          <button type="button" class="toggle-btn" data-value="10">10</button>
+          <button type="button" class="toggle-btn" data-value="20">20</button>
         </div>
       </div>
     </div>
@@ -75,7 +84,7 @@
 
       <div class="quiz-actions">
         <button type="submit" id="btn-validate" class="btn btn-primary">Valider</button>
-        <button type="button" id="btn-next" class="btn btn-primary hidden">Ville suivante →</button>
+        <button type="button" id="btn-next" class="btn btn-primary hidden">Ville suivante</button>
       </div>
     </form>
 

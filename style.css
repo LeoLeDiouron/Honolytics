@@ -51,6 +51,7 @@ body {
   letter-spacing: 1px;
   text-align: center;
   color: var(--accent);
+  cursor: pointer;
   text-transform: uppercase;
   text-shadow: 1px 1px 0 rgba(246, 236, 212, 0.6);
 }
@@ -209,7 +210,9 @@ h1 {
 
 .quiz-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 12px;
   color: var(--text-dim);
   margin-bottom: 18px;
   font-size: 0.95rem;

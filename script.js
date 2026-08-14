@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var QUIZ_LEN = 10;
+  var DEFAULT_QUIZ_LEN = 5;
 
   // Barème : 2 pts pays/capitale + 4 pts latitude + 4 pts longitude = 10 pts / ville
   var GUESS_POINTS = 2;
@@ -10,7 +10,8 @@
 
   var settings = {
     direction: "capital-to-country", // ou "country-to-capital"
-    coords: true
+    coords: true,
+    count: DEFAULT_QUIZ_LEN
   };
 
   var CONTINENTS = [
@@ -120,6 +121,9 @@
     wireToggle("toggle-coords", function (value) {
       settings.coords = value === "yes";
     });
+    wireToggle("toggle-count", function (value) {
+      settings.count = parseInt(value, 10);
+    });
   }
 
   function renderHome() {
@@ -156,7 +160,7 @@
 
   function startQuiz(scope) {
     var pool = citiesForScope(scope);
-    var length = Math.min(QUIZ_LEN, pool.length);
+    var length = Math.min(settings.count, pool.length);
     state = {
       scope: scope,
       direction: settings.direction,
@@ -225,7 +229,7 @@
     if (diff <= EXACT_EPSILON) {
       return { points: 4, label: "exacte (avec décimales)" };
     }
-    if (Math.round(input) === Math.round(correct)) {
+    if (Math.trunc(input) === Math.trunc(correct)) {
       return { points: 3, label: "exacte (partie entière)" };
     }
     if (diff < 2) {
@@ -321,7 +325,7 @@
     var nextBtn = document.getElementById("btn-next");
     nextBtn.classList.remove("hidden");
     nextBtn.textContent =
-      state.index < state.cities.length - 1 ? "Ville suivante →" : "Voir le résultat →";
+      state.index < state.cities.length - 1 ? "Ville suivante" : "Voir le résultat";
     nextBtn.focus();
   }
 
@@ -388,6 +392,9 @@
     startQuiz(state.scope);
   });
   document.getElementById("btn-home").addEventListener("click", function () {
+    showScreen("home");
+  });
+  document.getElementById("logo-home").addEventListener("click", function () {
     showScreen("home");
   });
 
