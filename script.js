@@ -3,11 +3,15 @@
 
   var QUIZ_LEN = 10;
 
-  // Barème : 2 pts pays + 4 pts latitude + 4 pts longitude = 10 pts / ville
-  var COUNTRY_POINTS = 2;
+  // Barème : 2 pts pays/capitale + 4 pts latitude + 4 pts longitude = 10 pts / ville
+  var GUESS_POINTS = 2;
   var COORD_MAX_POINTS = 4;
   var EXACT_EPSILON = 1e-6;
-  var CITY_MAX_POINTS = COUNTRY_POINTS + 2 * COORD_MAX_POINTS;
+
+  var settings = {
+    direction: "capital-to-country", // ou "country-to-capital"
+    coords: true
+  };
 
   var CONTINENTS = [
     { key: "afrique", label: "Afrique", emoji: "🌍" },
@@ -90,7 +94,33 @@
     });
   }
 
+  function cityMaxPoints() {
+    return GUESS_POINTS + (settings.coords ? 2 * COORD_MAX_POINTS : 0);
+  }
+
   // ---------- Accueil ----------
+
+  function initOptions() {
+    function wireToggle(id, onChange) {
+      var group = document.getElementById(id);
+      group.querySelectorAll(".toggle-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          group.querySelectorAll(".toggle-btn").forEach(function (b) {
+            b.classList.remove("active");
+          });
+          btn.classList.add("active");
+          onChange(btn.getAttribute("data-value"));
+        });
+      });
+    }
+
+    wireToggle("toggle-direction", function (value) {
+      settings.direction = value;
+    });
+    wireToggle("toggle-coords", function (value) {
+      settings.coords = value === "yes";
+    });
+  }
 
   function renderHome() {
     var grid = document.getElementById("scope-grid");
@@ -129,6 +159,8 @@
     var length = Math.min(QUIZ_LEN, pool.length);
     state = {
       scope: scope,
+      direction: settings.direction,
+      coords: settings.coords,
       cities: shuffle(pool).slice(0, length),
       index: 0,
       score: 0,
@@ -142,11 +174,32 @@
     return state.cities[state.index];
   }
 
+  // Donnée affichée dans la carte, et donnée à deviner dans le champ texte.
+  function shownValue(city) {
+    return state.direction === "country-to-capital" ? city.country : city.name;
+  }
+
+  function guessTarget(city) {
+    return state.direction === "country-to-capital" ? city.name : city.country;
+  }
+
   function renderCity() {
     document.getElementById("quiz-progress").textContent =
       "Ville " + (state.index + 1) + "/" + state.cities.length;
     document.getElementById("quiz-score").textContent = "Score : " + state.score;
-    document.getElementById("city-name").textContent = currentCity().name;
+    document.getElementById("city-name").textContent = shownValue(currentCity());
+
+    if (state.direction === "country-to-capital") {
+      document.getElementById("city-question-label").textContent = "Quelle est la capitale de ce pays ?";
+      document.getElementById("label-guess").textContent = "Capitale";
+      document.getElementById("input-country").placeholder = "ex : Paris";
+    } else {
+      document.getElementById("city-question-label").textContent = "Quelle est cette ville ?";
+      document.getElementById("label-guess").textContent = "Pays";
+      document.getElementById("input-country").placeholder = "ex : France";
+    }
+
+    document.getElementById("coords-row").classList.toggle("hidden", !state.coords);
 
     ["country", "lon", "lat"].forEach(function (field) {
       var input = document.getElementById("input-" + field);
@@ -190,12 +243,12 @@
   }
 
   function setCountryFeedback(correct, correctValueText) {
-    var points = correct ? COUNTRY_POINTS : 0;
+    var points = correct ? GUESS_POINTS : 0;
     var el = document.getElementById("feedback-country");
-    el.className = "field-feedback " + feedbackClass(points, COUNTRY_POINTS);
+    el.className = "field-feedback " + feedbackClass(points, GUESS_POINTS);
     el.textContent =
       (correct ? "✓ correct" : "✗ réponse : " + correctValueText) +
-      " (+" + points + "/" + COUNTRY_POINTS + ")";
+      " (+" + points + "/" + GUESS_POINTS + ")";
     return points;
   }
 
@@ -213,16 +266,19 @@
 
     var city = currentCity();
     var countryInput = document.getElementById("input-country").value;
-    var lonInput = parseFloat(document.getElementById("input-lon").value);
-    var latInput = parseFloat(document.getElementById("input-lat").value);
+    var target = guessTarget(city);
 
-    var countryOk = isCloseEnough(normalizeStr(countryInput), normalizeStr(city.country));
-    var lonResult = scoreCoord(lonInput, city.lon);
-    var latResult = scoreCoord(latInput, city.lat);
+    var countryOk = isCloseEnough(normalizeStr(countryInput), normalizeStr(target));
+    var countryPoints = setCountryFeedback(countryOk, target);
 
-    var countryPoints = setCountryFeedback(countryOk, city.country);
-    var lonPoints = setCoordFeedback("lon", lonResult, city.lon);
-    var latPoints = setCoordFeedback("lat", latResult, city.lat);
+    var lonPoints = 0;
+    var latPoints = 0;
+    if (state.coords) {
+      var lonInput = parseFloat(document.getElementById("input-lon").value);
+      var latInput = parseFloat(document.getElementById("input-lat").value);
+      lonPoints = setCoordFeedback("lon", scoreCoord(lonInput, city.lon), city.lon);
+      latPoints = setCoordFeedback("lat", scoreCoord(latInput, city.lat), city.lat);
+    }
 
     var points = countryPoints + lonPoints + latPoints;
     state.score += points;
@@ -262,8 +318,15 @@
 
   function showResults() {
     showScreen("result");
-    var maxScore = state.cities.length * CITY_MAX_POINTS;
+    var maxPerCity = cityMaxPoints();
+    var maxScore = state.cities.length * maxPerCity;
     document.getElementById("final-score").textContent = state.score + " / " + maxScore;
+
+    var isReversed = state.direction === "country-to-capital";
+    document.getElementById("th-shown").textContent = isReversed ? "Pays" : "Ville";
+    document.getElementById("th-guess").textContent = isReversed ? "Capitale" : "Pays";
+    document.getElementById("th-lon").classList.toggle("hidden", !state.coords);
+    document.getElementById("th-lat").classList.toggle("hidden", !state.coords);
 
     var tbody = document.getElementById("result-tbody");
     tbody.innerHTML = "";
@@ -274,15 +337,21 @@
 
     state.results.forEach(function (r) {
       var tr = document.createElement("tr");
-      tr.innerHTML =
-        "<td>" + capitalize(r.city.name) + "</td>" +
-        '<td class="' + cellClass(r.countryPoints, COUNTRY_POINTS) + '">' +
-          capitalize(r.city.country) + " (+" + r.countryPoints + "/" + COUNTRY_POINTS + ")</td>" +
-        '<td class="' + cellClass(r.lonPoints, COORD_MAX_POINTS) + '">' +
-          r.city.lon + "° (+" + r.lonPoints + "/" + COORD_MAX_POINTS + ")</td>" +
-        '<td class="' + cellClass(r.latPoints, COORD_MAX_POINTS) + '">' +
-          r.city.lat + "° (+" + r.latPoints + "/" + COORD_MAX_POINTS + ")</td>" +
-        "<td>" + r.points + " / " + CITY_MAX_POINTS + "</td>";
+      var shown = isReversed ? r.city.country : r.city.name;
+      var guessed = isReversed ? r.city.name : r.city.country;
+      var html =
+        "<td>" + capitalize(shown) + "</td>" +
+        '<td class="' + cellClass(r.countryPoints, GUESS_POINTS) + '">' +
+          capitalize(guessed) + " (+" + r.countryPoints + "/" + GUESS_POINTS + ")</td>";
+      if (state.coords) {
+        html +=
+          '<td class="' + cellClass(r.lonPoints, COORD_MAX_POINTS) + '">' +
+            r.city.lon + "° (+" + r.lonPoints + "/" + COORD_MAX_POINTS + ")</td>" +
+          '<td class="' + cellClass(r.latPoints, COORD_MAX_POINTS) + '">' +
+            r.city.lat + "° (+" + r.latPoints + "/" + COORD_MAX_POINTS + ")</td>";
+      }
+      html += "<td>" + r.points + " / " + maxPerCity + "</td>";
+      tr.innerHTML = html;
       tbody.appendChild(tr);
     });
   }
@@ -302,6 +371,7 @@
     showScreen("home");
   });
 
+  initOptions();
   renderHome();
   showScreen("home");
 })();

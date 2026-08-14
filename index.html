@@ -17,8 +17,24 @@
   <!-- ÉCRAN D'ACCUEIL -->
   <section id="screen-home" class="screen">
     <h1>Quiz des capitales</h1>
-    <p class="subtitle">Choisis une zone géographique pour lancer un quiz de 10 villes.<br>
-    Pour chaque ville, retrouve le <strong>pays</strong>, la <strong>longitude</strong> et la <strong>latitude</strong>.</p>
+    <p class="subtitle">Choisis tes options, puis une zone géographique pour lancer un quiz de 10 villes.</p>
+
+    <div class="options-panel">
+      <div class="option-group">
+        <span class="option-label">Sens du quiz</span>
+        <div class="toggle-group" id="toggle-direction">
+          <button type="button" class="toggle-btn active" data-value="capital-to-country">Capitale → Pays</button>
+          <button type="button" class="toggle-btn" data-value="country-to-capital">Pays → Capitale</button>
+        </div>
+      </div>
+      <div class="option-group">
+        <span class="option-label">Coordonnées</span>
+        <div class="toggle-group" id="toggle-coords">
+          <button type="button" class="toggle-btn active" data-value="yes">Avec coordonnées</button>
+          <button type="button" class="toggle-btn" data-value="no">Sans coordonnées</button>
+        </div>
+      </div>
+    </div>
 
     <div class="scope-grid" id="scope-grid">
       <!-- généré en JS -->
@@ -33,18 +49,18 @@
     </div>
 
     <div class="city-card">
-      <div class="city-label">Quelle est cette ville ?</div>
+      <div class="city-label" id="city-question-label">Quelle est cette ville ?</div>
       <div class="city-name" id="city-name">—</div>
     </div>
 
     <form id="quiz-form" autocomplete="off">
       <div class="field">
-        <label for="input-country">Pays</label>
+        <label for="input-country" id="label-guess">Pays</label>
         <input type="text" id="input-country" placeholder="ex : France" />
         <span class="field-feedback" id="feedback-country"></span>
       </div>
 
-      <div class="field-row">
+      <div class="field-row" id="coords-row">
         <div class="field">
           <label for="input-lon">Longitude</label>
           <input type="number" step="any" id="input-lon" placeholder="ex : 2.35" />
@@ -72,10 +88,10 @@
       <table class="result-table" id="result-table">
         <thead>
           <tr>
-            <th>Ville</th>
-            <th>Pays</th>
-            <th>Longitude</th>
-            <th>Latitude</th>
+            <th id="th-shown">Ville</th>
+            <th id="th-guess">Pays</th>
+            <th id="th-lon">Longitude</th>
+            <th id="th-lat">Latitude</th>
             <th>Points</th>
           </tr>
         </thead>
