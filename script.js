@@ -43,6 +43,35 @@
       .replace(/^(le |la |les |l')/, "");
   }
 
+  function levenshteinDistance(a, b) {
+    var m = a.length;
+    var n = b.length;
+    var prev = [];
+    var curr = [];
+    for (var j = 0; j <= n; j++) prev[j] = j;
+    for (var i = 1; i <= m; i++) {
+      curr[0] = i;
+      for (var j = 1; j <= n; j++) {
+        var cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+        curr[j] = Math.min(
+          prev[j] + 1,
+          curr[j - 1] + 1,
+          prev[j - 1] + cost
+        );
+      }
+      prev = curr.slice();
+    }
+    return prev[n];
+  }
+
+  // Tolère les fautes de frappe : le seuil s'élargit avec la longueur du mot correct.
+  function isCloseEnough(input, correct) {
+    if (input === correct) return true;
+    if (!input || !correct) return false;
+    var threshold = correct.length <= 4 ? 1 : correct.length <= 8 ? 2 : 3;
+    return levenshteinDistance(input, correct) <= threshold;
+  }
+
   function shuffle(arr) {
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
@@ -187,7 +216,7 @@
     var lonInput = parseFloat(document.getElementById("input-lon").value);
     var latInput = parseFloat(document.getElementById("input-lat").value);
 
-    var countryOk = normalizeStr(countryInput) === normalizeStr(city.country);
+    var countryOk = isCloseEnough(normalizeStr(countryInput), normalizeStr(city.country));
     var lonResult = scoreCoord(lonInput, city.lon);
     var latResult = scoreCoord(latInput, city.lat);
 
