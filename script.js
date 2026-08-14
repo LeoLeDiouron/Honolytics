@@ -200,6 +200,7 @@
     }
 
     document.getElementById("coords-row").classList.toggle("hidden", !state.coords);
+    hideCityMap();
 
     ["country", "lon", "lat"].forEach(function (field) {
       var input = document.getElementById("input-" + field);
@@ -234,6 +235,24 @@
       return { points: 1, label: "à moins de 5°" };
     }
     return { points: 0, label: "à plus de 5°" };
+  }
+
+  // Carte centrée sur la ville, affichée une fois la réponse validée.
+  function showCityMap(city) {
+    var delta = 4;
+    var bbox = [
+      city.lon - delta, city.lat - delta,
+      city.lon + delta, city.lat + delta
+    ].join(",");
+    var iframe = document.getElementById("city-map");
+    iframe.src = "https://www.openstreetmap.org/export/embed.html?bbox=" + bbox +
+      "&layer=mapnik&marker=" + city.lat + "," + city.lon;
+    document.getElementById("city-map-wrap").classList.remove("hidden");
+  }
+
+  function hideCityMap() {
+    document.getElementById("city-map-wrap").classList.add("hidden");
+    document.getElementById("city-map").src = "";
   }
 
   function feedbackClass(points, max) {
@@ -292,6 +311,7 @@
     });
 
     document.getElementById("quiz-score").textContent = "Score : " + state.score;
+    showCityMap(city);
 
     ["country", "lon", "lat"].forEach(function (field) {
       document.getElementById("input-" + field).disabled = true;
