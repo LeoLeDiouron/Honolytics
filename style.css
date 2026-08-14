@@ -200,6 +200,10 @@ input:disabled {
   color: var(--bad);
 }
 
+.field-feedback.warn {
+  color: var(--warn);
+}
+
 .quiz-actions {
   display: flex;
   gap: 12px;
@@ -289,6 +293,10 @@ input:disabled {
 
 .result-table td.cell-ko {
   color: var(--bad);
+}
+
+.result-table td.cell-warn {
+  color: var(--warn);
 }
 
 .result-table tr:last-child td {

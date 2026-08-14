@@ -2,7 +2,12 @@
   "use strict";
 
   var QUIZ_LEN = 10;
-  var TOLERANCE_DEG = 3; // marge d'erreur acceptée pour longitude / latitude
+
+  // Barème : 2 pts pays + 4 pts latitude + 4 pts longitude = 10 pts / ville
+  var COUNTRY_POINTS = 2;
+  var COORD_MAX_POINTS = 4;
+  var EXACT_EPSILON = 1e-6;
+  var CITY_MAX_POINTS = COUNTRY_POINTS + 2 * COORD_MAX_POINTS;
 
   var CONTINENTS = [
     { key: "afrique", label: "Afrique", emoji: "🌍" },
@@ -127,10 +132,51 @@
     document.getElementById("btn-next").classList.add("hidden");
   }
 
-  function setFeedback(field, correct, correctValueText) {
+  // Sous-barème coordonnées :
+  //   >5°: 0 pt | <5°: 1 pt | <2°: 2 pts | exacte (partie entière): 3 pts | exacte (avec décimales): 4 pts
+  function scoreCoord(input, correct) {
+    if (isNaN(input)) {
+      return { points: 0, label: "aucune réponse" };
+    }
+    var diff = Math.abs(input - correct);
+    if (diff <= EXACT_EPSILON) {
+      return { points: 4, label: "exacte (avec décimales)" };
+    }
+    if (Math.round(input) === Math.round(correct)) {
+      return { points: 3, label: "exacte (partie entière)" };
+    }
+    if (diff < 2) {
+      return { points: 2, label: "à moins de 2°" };
+    }
+    if (diff < 5) {
+      return { points: 1, label: "à moins de 5°" };
+    }
+    return { points: 0, label: "à plus de 5°" };
+  }
+
+  function feedbackClass(points, max) {
+    if (points >= max) return "ok";
+    if (points <= 0) return "ko";
+    return "warn";
+  }
+
+  function setCountryFeedback(correct, correctValueText) {
+    var points = correct ? COUNTRY_POINTS : 0;
+    var el = document.getElementById("feedback-country");
+    el.className = "field-feedback " + feedbackClass(points, COUNTRY_POINTS);
+    el.textContent =
+      (correct ? "✓ correct" : "✗ réponse : " + correctValueText) +
+      " (+" + points + "/" + COUNTRY_POINTS + ")";
+    return points;
+  }
+
+  function setCoordFeedback(field, result, correctValueText) {
     var el = document.getElementById("feedback-" + field);
-    el.className = "field-feedback " + (correct ? "ok" : "ko");
-    el.textContent = correct ? "✓ correct" : "✗ réponse : " + correctValueText;
+    el.className = "field-feedback " + feedbackClass(result.points, COORD_MAX_POINTS);
+    el.textContent =
+      "réponse : " + correctValueText + "° — " + result.label +
+      " (+" + result.points + "/" + COORD_MAX_POINTS + ")";
+    return result.points;
   }
 
   function handleSubmit(e) {
@@ -142,20 +188,21 @@
     var latInput = parseFloat(document.getElementById("input-lat").value);
 
     var countryOk = normalizeStr(countryInput) === normalizeStr(city.country);
-    var lonOk = !isNaN(lonInput) && Math.abs(lonInput - city.lon) <= TOLERANCE_DEG;
-    var latOk = !isNaN(latInput) && Math.abs(latInput - city.lat) <= TOLERANCE_DEG;
+    var lonResult = scoreCoord(lonInput, city.lon);
+    var latResult = scoreCoord(latInput, city.lat);
 
-    setFeedback("country", countryOk, city.country);
-    setFeedback("lon", lonOk, city.lon + "°");
-    setFeedback("lat", latOk, city.lat + "°");
+    var countryPoints = setCountryFeedback(countryOk, city.country);
+    var lonPoints = setCoordFeedback("lon", lonResult, city.lon);
+    var latPoints = setCoordFeedback("lat", latResult, city.lat);
 
-    var points = (countryOk ? 1 : 0) + (lonOk ? 1 : 0) + (latOk ? 1 : 0);
+    var points = countryPoints + lonPoints + latPoints;
     state.score += points;
     state.results.push({
       city: city,
       countryOk: countryOk,
-      lonOk: lonOk,
-      latOk: latOk,
+      countryPoints: countryPoints,
+      lonPoints: lonPoints,
+      latPoints: latPoints,
       points: points
     });
 
@@ -186,20 +233,27 @@
 
   function showResults() {
     showScreen("result");
-    var maxScore = state.cities.length * 3;
+    var maxScore = state.cities.length * CITY_MAX_POINTS;
     document.getElementById("final-score").textContent = state.score + " / " + maxScore;
 
     var tbody = document.getElementById("result-tbody");
     tbody.innerHTML = "";
 
+    function cellClass(points, max) {
+      return "cell-" + feedbackClass(points, max);
+    }
+
     state.results.forEach(function (r) {
       var tr = document.createElement("tr");
       tr.innerHTML =
         "<td>" + capitalize(r.city.name) + "</td>" +
-        '<td class="' + (r.countryOk ? "cell-ok" : "cell-ko") + '">' + capitalize(r.city.country) + "</td>" +
-        '<td class="' + (r.lonOk ? "cell-ok" : "cell-ko") + '">' + r.city.lon + "°</td>" +
-        '<td class="' + (r.latOk ? "cell-ok" : "cell-ko") + '">' + r.city.lat + "°</td>" +
-        "<td>" + r.points + " / 3</td>";
+        '<td class="' + cellClass(r.countryPoints, COUNTRY_POINTS) + '">' +
+          capitalize(r.city.country) + " (+" + r.countryPoints + "/" + COUNTRY_POINTS + ")</td>" +
+        '<td class="' + cellClass(r.lonPoints, COORD_MAX_POINTS) + '">' +
+          r.city.lon + "° (+" + r.lonPoints + "/" + COORD_MAX_POINTS + ")</td>" +
+        '<td class="' + cellClass(r.latPoints, COORD_MAX_POINTS) + '">' +
+          r.city.lat + "° (+" + r.latPoints + "/" + COORD_MAX_POINTS + ")</td>" +
+        "<td>" + r.points + " / " + CITY_MAX_POINTS + "</td>";
       tbody.appendChild(tr);
     });
   }
