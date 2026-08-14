@@ -239,7 +239,7 @@
 
   // Carte centrée sur la ville, affichée une fois la réponse validée.
   function showCityMap(city) {
-    var delta = 4;
+    var delta = 8;
     var bbox = [
       city.lon - delta, city.lat - delta,
       city.lon + delta, city.lat + delta
